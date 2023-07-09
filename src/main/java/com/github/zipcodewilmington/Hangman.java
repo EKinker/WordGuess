@@ -17,11 +17,8 @@ public class Hangman {
     }
 
     //instance variables    //use to sync all the game state
-
-    public static void println(String output, Object... args) {print(output + "\n", args);}
-    public static void print(String output, Object... args) {System.out.printf(output, args);}   //this is from Sci Calc
-
     public static boolean playGame = true;
+
     //array of strings of words player could guess
     String[] wordList = {"alphabet", "breakfast", "cockatiel", "dragonfly", "enormous", "figurehead", "gathering"};
     static int guessesLeft;
@@ -29,30 +26,37 @@ public class Hangman {
     char[] lettersInWord = new char[wordToGuess.length()];
     public void runGame() {   //all output and input should be in specialized methods, not in runGame()
         //int randomInd = new Random().nextInt(wordList.length);  //possibly remove
-
+        announceGame();
 
         //while keep playing?  (outer loop)
         //while (playGame) {
             System.out.println(wordToGuess);  //test.  Remove later
+
             initializeGameState();
             //start game
             //set word guessed to false
             boolean isGuessed = false;
             // while word isn't guessed (inner loop)
-            while (!isGuessed) {
+            while (!isGuessed && guessesLeft > 0) {
                 printCurrentState();  //print current game state
+                System.out.println("Guess a letter: ");
                 process(getPlayerInput()); //ask for a guess (1 letter) and check for letter in word
+                System.out.println(wordToGuess.toCharArray()); // test
+                System.out.println(lettersInWord); //test
 
-                //increment number of guesses
-
-                //if word is guessed
-                //player won
-                // if too many guesses
-                //player loses
+                isGuessed = isWordGuessed();
+                System.out.println(isGuessed);
             }
+                if (isGuessed){
+                    playerWon();
+                }
+                if (guessesLeft == 0){
+                    playerLost();
+                }
+
             // play again?
        // }
-        //game over
+        gameOver();//game over
     }
 
     public static String printArray(char[] array) { // print out characters from the array with a space between
@@ -91,8 +95,12 @@ public class Hangman {
 
 
 
-    public void isWordGuessed() {  //returns boolean
-
+    public boolean isWordGuessed() {  //returns boolean
+        String letters = lettersInWord.toString();
+        if (letters.equals(wordToGuess)){
+            return true;
+        }
+        return false;
     }
 
     public void askToPlayAgain() {  //returns boolean
@@ -113,20 +121,22 @@ public class Hangman {
     }
 
     public void process(char input) {  //loops through the word array, looking for the input guess, replaces the "_" with the guessed char if found
-
+        boolean correctGuess = false;
         for (int i = 0; i < wordToGuess.length(); i ++){
             char ch = wordToGuess.charAt(i);
             if (ch == input) {
                 lettersInWord[i]= ch;
+                correctGuess = true;
             }
         }
+        if (!correctGuess) { guessesLeft--;}
     }
 
     public void playerWon() { //    :)
-
+        System.out.println("You guessed the word!");
     }
 
     public void playerLost() { //   :(
-
+        System.out.println("Oh no! You didn't guess the word in time.  Womp Womp :(");
     }
 }
