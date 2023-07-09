@@ -29,7 +29,7 @@ public class Hangman {
         announceGame();
 
         //while keep playing?  (outer loop)
-        //while (playGame) {
+        while (playGame) {
             System.out.println(wordToGuess);  //test.  Remove later
 
             initializeGameState();
@@ -39,13 +39,10 @@ public class Hangman {
             // while word isn't guessed (inner loop)
             while (!isGuessed && guessesLeft > 0) {
                 printCurrentState();  //print current game state
-                System.out.println("Guess a letter: ");
+                System.out.print("Guess a letter: ");
                 process(getPlayerInput()); //ask for a guess (1 letter) and check for letter in word
-                System.out.println(wordToGuess.toCharArray()); // test
-                System.out.println(lettersInWord); //test
-
                 isGuessed = isWordGuessed();
-                System.out.println(isGuessed);
+
             }
                 if (isGuessed){
                     playerWon();
@@ -55,7 +52,8 @@ public class Hangman {
                 }
 
             // play again?
-       // }
+            askToPlayAgain();
+        }
         gameOver();//game over
     }
 
@@ -65,7 +63,7 @@ public class Hangman {
         for (int i = 0; i < array.length; i++) {
             spacedWord += (array[i]) + " ";
         }
-        return spacedWord.toString();
+        return spacedWord;
     }
 
     public void announceGame() { //print welcome
@@ -88,7 +86,7 @@ public class Hangman {
     public static char getPlayerInput() { //returns a char from player input   //use Scanner class
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
-        char letter = input.charAt(0);
+        char letter = input.toLowerCase().charAt(0);
 
         return letter;
     }
@@ -96,14 +94,22 @@ public class Hangman {
 
 
     public boolean isWordGuessed() {  //returns boolean
-        String letters = lettersInWord.toString();
-        if (letters.equals(wordToGuess)){
-            return true;
+        boolean game = true;
+        for (int i = 0; i < lettersInWord.length; i ++) {
+            if (lettersInWord[i] == '_') {
+                game = false;
+            }
         }
-        return false;
+        return game;
     }
 
     public void askToPlayAgain() {  //returns boolean
+        System.out.print("Would you like to play again?");
+        char response = getPlayerInput();
+        if (response == 'n') {
+            playGame = false;
+        }
+
 
     }
 
@@ -137,6 +143,6 @@ public class Hangman {
     }
 
     public void playerLost() { //   :(
-        System.out.println("Oh no! You didn't guess the word in time.  Womp Womp :(");
+        System.out.println("Oh no! You didn't guess the word in time. The word was \'" +wordToGuess + "\'. Womp Womp :(");
     }
 }
