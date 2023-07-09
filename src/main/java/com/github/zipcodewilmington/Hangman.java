@@ -20,7 +20,7 @@ public class Hangman {
     public static boolean playGame = true;
 
     //array of strings of words player could guess
-    String[] wordList = {"alphabet", "breakfast", "cockatiel", "dragonfly", "enormous", "figurehead", "gathering"};
+    String[] wordList = {"alphabet", "breakfast", "cockatiel", "dragonfly", "enormous", "fancy", "gathering","handkerchief","iguana","jaguar","kindergarten", "loquacious", "malcontent", "narrator", "overloaded", "penguin", "quarrelsome","roadmap","shellfish","tangerine","unicorn","valentine","wombat","xylophone", "yankee", "zephyr" };
     static int guessesLeft;
 
     public void runGame() {   //all output and input should be in specialized methods, not in runGame()
@@ -32,7 +32,7 @@ public class Hangman {
             String wordToGuess = wordList[new Random().nextInt(wordList.length)]; //game picks a random word //Use Random class
             char[] lettersInWord = new char[wordToGuess.length()];
 
-            System.out.println(wordToGuess);  //test.  Remove later
+            //System.out.println(wordToGuess);  //test.  Remove later
 
             initializeGameState(lettersInWord,wordToGuess);
             //start game
@@ -89,7 +89,12 @@ public class Hangman {
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
         char letter = input.toLowerCase().charAt(0);
+        if (letter == '-') {
+            System.exit(0);
+        } else if (!Character.isLetter(letter)){
 
+            return ' ';
+        }
         return letter;
     }
 
