@@ -24,11 +24,12 @@ public class Hangman {
     public static boolean playGame = true;
     //array of strings of words player could guess
     String[] wordList = {"alphabet", "breakfast", "cockatiel", "dragonfly", "enormous", "figurehead", "gathering"};
-    static int guessesLeft = 5;
-
+    static int guessesLeft;
+    String wordToGuess = wordList[new Random().nextInt(wordList.length)]; //game picks a random word //Use Random class
+    char[] lettersInWord = new char[wordToGuess.length()];
     public void runGame() {   //all output and input should be in specialized methods, not in runGame()
-        //int randomInd = new Random().nextInt(wordList.length);
-        String wordToGuess = wordList[new Random().nextInt(wordList.length)]; //game picks a random word //Use Random class
+        //int randomInd = new Random().nextInt(wordList.length);  //possibly remove
+
 
         //while keep playing?  (outer loop)
         while (playGame) {
@@ -38,6 +39,7 @@ public class Hangman {
             boolean isGuessed = false;
             // while word isn't guessed (inner loop)
             while (!isGuessed) {
+                printCurrentState();
 
 
                 //print current game state
@@ -75,7 +77,11 @@ public class Hangman {
     }
 
     public void initializeGameState() { //sets up char[] for secret word and guesses
-        //for (char element:)
+        for (int i = 0; i < lettersInWord.length; i++){
+            lettersInWord[i] = '_';
+        }
+        guessesLeft = wordToGuess.length();
+
     }
 
     public static String getPlayerInput(String prompt) { //returns a char from player input   //use Scanner class
@@ -95,10 +101,17 @@ public class Hangman {
     }
 
     public void printCurrentState() {  //uses printArray to show player where they are at
+
+
+        System.out.println(remainingGuesses());
+    }
+
+    private static String remainingGuesses() {
         String playsLeft = "Guesses Remaining: ";
         for (int i = 0; i< guessesLeft; i++ ) {
             playsLeft+="X";
         }
+        return playsLeft;
     }
 
     public void process() {  //loops through the word array, looking for the input guess, replaces the "_" with the guessed char if found
