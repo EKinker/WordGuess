@@ -20,35 +20,37 @@ public class Hangman {
     public static boolean playGame = true;
 
     //array of strings of words player could guess
-    String[] wordList = {"alphabet", "breakfast", "cockatiel", "dragonfly", "enormous", "figurehead", "gathering"};
+    String[] wordList = {"alphabet", "breakfast", "cockatiel", "dragonfly", "enormous", "fancy", "gathering","handkerchief","iguana","jaguar","kindergarten", "loquacious", "malcontent", "narrator", "overloaded", "penguin", "quarrelsome","roadmap","shellfish","tangerine","unicorn","valentine","wombat","xylophone", "yankee", "zephyr" };
     static int guessesLeft;
-    String wordToGuess = wordList[new Random().nextInt(wordList.length)]; //game picks a random word //Use Random class
-    char[] lettersInWord = new char[wordToGuess.length()];
+
     public void runGame() {   //all output and input should be in specialized methods, not in runGame()
         //int randomInd = new Random().nextInt(wordList.length);  //possibly remove
         announceGame();
 
         //while keep playing?  (outer loop)
         while (playGame) {
-            System.out.println(wordToGuess);  //test.  Remove later
+            String wordToGuess = wordList[new Random().nextInt(wordList.length)]; //game picks a random word //Use Random class
+            char[] lettersInWord = new char[wordToGuess.length()];
 
-            initializeGameState();
+            //System.out.println(wordToGuess);  //test.  Remove later
+
+            initializeGameState(lettersInWord,wordToGuess);
             //start game
             //set word guessed to false
             boolean isGuessed = false;
             // while word isn't guessed (inner loop)
             while (!isGuessed && guessesLeft > 0) {
-                printCurrentState();  //print current game state
+                printCurrentState(lettersInWord);  //print current game state
                 System.out.print("Guess a letter: ");
-                process(getPlayerInput()); //ask for a guess (1 letter) and check for letter in word
-                isGuessed = isWordGuessed();
+                process(getPlayerInput(),lettersInWord,wordToGuess); //ask for a guess (1 letter) and check for letter in word
+                isGuessed = isWordGuessed(lettersInWord);
 
             }
                 if (isGuessed){
                     playerWon();
                 }
                 if (guessesLeft == 0){
-                    playerLost();
+                    playerLost(wordToGuess);
                 }
 
             // play again?
@@ -75,11 +77,11 @@ public class Hangman {
         playGame =false;
     }
 
-    public void initializeGameState() { //sets up char[] for secret word and guesses
-        for (int i = 0; i < lettersInWord.length; i++){
-            lettersInWord[i] = '_';
+    public void initializeGameState(char[] ch, String word) { //sets up char[] for secret word and guesses
+        for (int i = 0; i < ch.length; i++){
+            ch[i] = '_';
         }
-        guessesLeft = wordToGuess.length();
+        guessesLeft = word.length();
 
     }
 
@@ -87,16 +89,21 @@ public class Hangman {
         Scanner scanner = new Scanner(System.in);
         String input = scanner.nextLine();
         char letter = input.toLowerCase().charAt(0);
+        if (letter == '-') {
+            System.exit(0);
+        } else if (!Character.isLetter(letter)){
 
+            return ' ';
+        }
         return letter;
     }
 
 
 
-    public boolean isWordGuessed() {  //returns boolean
+    public boolean isWordGuessed(char[] ch) {  //returns boolean
         boolean game = true;
-        for (int i = 0; i < lettersInWord.length; i ++) {
-            if (lettersInWord[i] == '_') {
+        for (int i = 0; i < ch.length; i ++) {
+            if (ch[i] == '_') {
                 game = false;
             }
         }
@@ -113,8 +120,8 @@ public class Hangman {
 
     }
 
-    public void printCurrentState() {  //uses printArray to show player where they are at
-        System.out.println(printArray(lettersInWord));
+    public void printCurrentState(char[] ch) {  //uses printArray to show player where they are at
+        System.out.println(printArray(ch));
         System.out.println(remainingGuesses());
     }
 
@@ -126,12 +133,12 @@ public class Hangman {
         return playsLeft;
     }
 
-    public void process(char input) {  //loops through the word array, looking for the input guess, replaces the "_" with the guessed char if found
+    public void process(char input, char[] chAr, String word) {  //loops through the word array, looking for the input guess, replaces the "_" with the guessed char if found
         boolean correctGuess = false;
-        for (int i = 0; i < wordToGuess.length(); i ++){
-            char ch = wordToGuess.charAt(i);
+        for (int i = 0; i < word.length(); i ++){
+            char ch = word.charAt(i);
             if (ch == input) {
-                lettersInWord[i]= ch;
+                chAr[i]= ch;
                 correctGuess = true;
             }
         }
@@ -142,7 +149,7 @@ public class Hangman {
         System.out.println("You guessed the word!");
     }
 
-    public void playerLost() { //   :(
-        System.out.println("Oh no! You didn't guess the word in time. The word was \'" +wordToGuess + "\'. Womp Womp :(");
+    public void playerLost(String word) { //   :(
+        System.out.println("Oh no! You didn't guess the word in time. The word was \'" +word + "\'. Womp Womp :(");
     }
 }
