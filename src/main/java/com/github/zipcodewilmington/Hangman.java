@@ -32,20 +32,17 @@ public class Hangman {
 
 
         //while keep playing?  (outer loop)
-        while (playGame) {
+        //while (playGame) {
             System.out.println(wordToGuess);  //test.  Remove later
+            initializeGameState();
             //start game
             //set word guessed to false
             boolean isGuessed = false;
             // while word isn't guessed (inner loop)
             while (!isGuessed) {
-                printCurrentState();
+                printCurrentState();  //print current game state
+                process(getPlayerInput()); //ask for a guess (1 letter) and check for letter in word
 
-
-                //print current game state
-                //ask for a guess (1 letter)
-
-                //check the letter against th word
                 //increment number of guesses
 
                 //if word is guessed
@@ -54,7 +51,7 @@ public class Hangman {
                 //player loses
             }
             // play again?
-        }
+       // }
         //game over
     }
 
@@ -84,10 +81,12 @@ public class Hangman {
 
     }
 
-    public static String getPlayerInput(String prompt) { //returns a char from player input   //use Scanner class
+    public static char getPlayerInput() { //returns a char from player input   //use Scanner class
         Scanner scanner = new Scanner(System.in);
-        println(prompt);
-        return scanner.nextLine();
+        String input = scanner.nextLine();
+        char letter = input.charAt(0);
+
+        return letter;
     }
 
 
@@ -101,8 +100,7 @@ public class Hangman {
     }
 
     public void printCurrentState() {  //uses printArray to show player where they are at
-
-
+        System.out.println(printArray(lettersInWord));
         System.out.println(remainingGuesses());
     }
 
@@ -114,8 +112,14 @@ public class Hangman {
         return playsLeft;
     }
 
-    public void process() {  //loops through the word array, looking for the input guess, replaces the "_" with the guessed char if found
+    public void process(char input) {  //loops through the word array, looking for the input guess, replaces the "_" with the guessed char if found
 
+        for (int i = 0; i < wordToGuess.length(); i ++){
+            char ch = wordToGuess.charAt(i);
+            if (ch == input) {
+                lettersInWord[i]= ch;
+            }
+        }
     }
 
     public void playerWon() { //    :)
